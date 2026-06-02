@@ -1,0 +1,4 @@
+logging:
+  level:
+    com.mirage.sso: debug
+    org.springframework.security: info
