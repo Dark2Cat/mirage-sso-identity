@@ -29,6 +29,7 @@ dependencies {
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.7")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
+    implementation("io.minio:minio:9.0.1")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     runtimeOnly("com.mysql:mysql-connector-j")

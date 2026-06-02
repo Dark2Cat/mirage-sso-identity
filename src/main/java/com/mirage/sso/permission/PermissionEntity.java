@@ -1,7 +1,9 @@
-package com.mirage.sso.role;
+package com.mirage.sso.permission;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.mirage.sso.role.RoleStatus;
+
 import java.time.LocalDateTime;
 
 @TableName("sso_permission")

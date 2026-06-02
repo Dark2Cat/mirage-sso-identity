@@ -229,3 +229,40 @@ create table sso_audit_log (
     key idx_sso_audit_created_at (created_at),
     key idx_sso_audit_event_type (event_type)
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_0900_ai_ci;
+
+create table sso_media_file (
+    -- 文件 ID，使用文件内容 MD5
+    id varchar(64) not null primary key,
+    -- 原始文件名称
+    filename varchar(255) null,
+    -- 文件类型：0-图片，1-文档，2-视频
+    file_type int null,
+    -- 标签
+    tags varchar(255) null,
+    -- 存储桶
+    bucket varchar(128) null,
+    -- 存储对象路径
+    file_path varchar(512) null,
+    -- 文件 ID，使用文件内容 MD5
+    file_id varchar(64) null,
+    -- 文件访问路径
+    url varchar(512) null,
+    -- 上传人
+    upload_by varchar(128) null,
+    -- 上传时间
+    upload_date datetime(3) null,
+    -- 修改时间
+    change_date datetime(3) null,
+    -- 状态：0-正常，1-不展示
+    status int null,
+    -- 备注
+    remark varchar(512) null,
+    -- 审核状态
+    audit_status varchar(64) null,
+    -- 审核意见
+    audit_mind varchar(512) null,
+    -- 文件大小
+    file_size bigint null,
+    key idx_sso_media_file_file_id (file_id),
+    key idx_sso_media_file_upload_date (upload_date)
+) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_0900_ai_ci;

@@ -1,7 +1,7 @@
 package com.mirage.sso.auth;
 
 import com.mirage.sso.common.BusinessException;
-import com.mirage.sso.role.PermissionEntity;
+import com.mirage.sso.permission.PermissionEntity;
 import com.mirage.sso.role.RoleEntity;
 import com.mirage.sso.role.RoleService;
 import com.mirage.sso.client.AppAccessMapper;
@@ -61,7 +61,7 @@ public class AuthService {
                 user.getNickname(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getAvatarUrl(),
+                userService.resolveAvatarUrl(user.getAvatarUrl()),
                 roleCodes(user),
                 permissionCodes(user),
                 appCodes(user)

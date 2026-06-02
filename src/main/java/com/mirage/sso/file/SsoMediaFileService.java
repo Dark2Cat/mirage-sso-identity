@@ -1,6 +1,7 @@
 package com.mirage.sso.file;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
 * @author jotiancheng
@@ -8,5 +9,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2026-06-02 17:46:37
 */
 public interface SsoMediaFileService extends IService<SsoMediaFile> {
-
+    SsoMediaFile uploadAvatar(MultipartFile file, String uploadBy);
 }

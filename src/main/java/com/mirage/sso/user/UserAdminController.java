@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/admin/users")
@@ -52,13 +55,27 @@ public class UserAdminController {
         return ApiResponse.success(userService.resetPassword(id));
     }
 
-    @PutMapping("/me/profile")
+    @PutMapping(value = "/me/profile", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<UserSummary> updateProfile(
             Principal principal,
             @RequestBody ProfileUpdateRequest request
     ) {
         String username = currentUsername(principal);
         return ApiResponse.success(userService.updateProfile(username, request));
+    }
+
+    @PutMapping(value = "/me/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UserSummary> updateProfileWithAvatar(
+            Principal principal,
+            @RequestParam(required = false) String nickname,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String avatarUrl,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar
+    ) {
+        String username = currentUsername(principal);
+        ProfileUpdateRequest request = new ProfileUpdateRequest(nickname, email, phone, avatarUrl);
+        return ApiResponse.success(userService.updateProfile(username, request, avatar));
     }
 
     @PostMapping("/me/password")

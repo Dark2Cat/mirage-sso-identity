@@ -1,4 +1,6 @@
-package com.mirage.sso.role;
+package com.mirage.sso.permission;
+
+import com.mirage.sso.role.RoleStatus;
 
 public record PermissionResponse(
         Long id,

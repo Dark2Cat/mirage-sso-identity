@@ -3,9 +3,10 @@ package com.mirage.sso;
 import com.mirage.sso.audit.AuditLogMapper;
 import com.mirage.sso.client.AppAccessMapper;
 import com.mirage.sso.client.ClientMapper;
+import com.mirage.sso.file.SsoMediaFileMapper;
 import com.mirage.sso.organization.OrganizationMapper;
 import com.mirage.sso.portal.AppMapper;
-import com.mirage.sso.role.PermissionMapper;
+import com.mirage.sso.permission.PermissionMapper;
 import com.mirage.sso.role.RolePermissionMapper;
 import com.mirage.sso.role.RoleMapper;
 import com.mirage.sso.role.UserRoleMapper;
@@ -54,6 +55,9 @@ class MirageSsoIdentityApplicationTests {
 
     @MockBean
     private AuditLogMapper auditLogMapper;
+
+    @MockBean
+    private SsoMediaFileMapper ssoMediaFileMapper;
 
     @Test
     void contextLoads() {

@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mirage.sso.common.BusinessException;
 import com.mirage.sso.common.PageResponse;
+import com.mirage.sso.config.AppProperties;
+import com.mirage.sso.file.SsoMediaFile;
+import com.mirage.sso.file.SsoMediaFileService;
 import com.mirage.sso.organization.OrganizationEntity;
 import com.mirage.sso.organization.OrganizationMapper;
 import com.mirage.sso.role.RoleEntity;
@@ -15,6 +18,8 @@ import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -22,17 +27,23 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final OrganizationMapper organizationMapper;
+    private final SsoMediaFileService mediaFileService;
+    private final AppProperties properties;
 
     public UserService(
             UserMapper userMapper,
             PasswordEncoder passwordEncoder,
             RoleService roleService,
-            OrganizationMapper organizationMapper
+            OrganizationMapper organizationMapper,
+            SsoMediaFileService mediaFileService,
+            AppProperties properties
     ) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.organizationMapper = organizationMapper;
+        this.mediaFileService = mediaFileService;
+        this.properties = properties;
     }
 
     public Optional<UserEntity> findByUsername(String username) {
@@ -136,13 +147,22 @@ public class UserService {
 
     @Transactional
     public UserSummary updateProfile(String username, ProfileUpdateRequest request) {
+        return updateProfile(username, request, null);
+    }
+
+    @Transactional
+    public UserSummary updateProfile(String username, ProfileUpdateRequest request, MultipartFile avatar) {
         UserEntity entity = findByUsername(username)
                 .orElseThrow(() -> new BusinessException("USER_NOT_FOUND", "user not found"));
         entity.setNickname(request.nickname());
         entity.setEmail(request.email());
         entity.setPhone(request.phone());
-
-        entity.setAvatarUrl(request.avatarUrl());
+        if (avatar != null && !avatar.isEmpty()) {
+            SsoMediaFile mediaFile = mediaFileService.uploadAvatar(avatar, username);
+            entity.setAvatarUrl(mediaFile.getUrl());
+        } else {
+            entity.setAvatarUrl(request.avatarUrl());
+        }
         entity.setUpdatedAt(LocalDateTime.now());
         userMapper.updateById(entity);
         return toSummary(entity);
@@ -178,7 +198,35 @@ public class UserService {
                 .stream()
                 .map(RoleEntity::getCode)
                 .toList();
-        return UserSummary.from(entity, organizationName, roles);
+        return new UserSummary(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getNickname(),
+                entity.getEmail(),
+                entity.getPhone(),
+                resolveAvatarUrl(entity.getAvatarUrl()),
+                entity.getOrganizationId(),
+                organizationName,
+                roles,
+                entity.getStatus(),
+                entity.getLastLoginAt()
+        );
+    }
+
+    public String resolveAvatarUrl(String avatarUrl) {
+        if (!StringUtils.hasText(avatarUrl)
+                || avatarUrl.startsWith("http://")
+                || avatarUrl.startsWith("https://")
+                || avatarUrl.startsWith("data:")) {
+            return avatarUrl;
+        }
+        if (!avatarUrl.startsWith("/")) {
+            return avatarUrl;
+        }
+        String baseUrl = StringUtils.hasText(properties.minio().publicUrl())
+                ? properties.minio().publicUrl()
+                : properties.minio().endpoint();
+        return baseUrl.replaceAll("/+$", "") + avatarUrl;
     }
 
     private void applyRequest(UserEntity entity, UserUpsertRequest request) {

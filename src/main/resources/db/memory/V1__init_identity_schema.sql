@@ -171,3 +171,28 @@ create table sso_user_app (
     created_at timestamp not null,
     primary key (user_id, app_code)
 );
+
+-- sso_media_file 字段：
+-- id-文件 MD5；filename-文件名称；file_type-文件类型；bucket-存储桶；file_path-存储路径；
+-- file_id-文件 MD5；url-文件访问路径；upload_by-上传人；upload_date-上传时间；change_date-修改时间；
+-- status-状态；file_size-文件大小。
+create table sso_media_file (
+    id varchar(64) not null primary key,
+    filename varchar(255) null,
+    file_type int null,
+    tags varchar(255) null,
+    bucket varchar(128) null,
+    file_path varchar(512) null,
+    file_id varchar(64) null,
+    url varchar(512) null,
+    upload_by varchar(128) null,
+    upload_date timestamp null,
+    change_date timestamp null,
+    status int null,
+    remark varchar(512) null,
+    audit_status varchar(64) null,
+    audit_mind varchar(512) null,
+    file_size bigint null
+);
+create index idx_sso_media_file_file_id on sso_media_file (file_id);
+create index idx_sso_media_file_upload_date on sso_media_file (upload_date);

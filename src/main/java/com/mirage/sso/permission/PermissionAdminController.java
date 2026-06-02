@@ -1,4 +1,4 @@
-package com.mirage.sso.role;
+package com.mirage.sso.permission;
 
 import com.mirage.sso.common.ApiResponse;
 import jakarta.validation.Valid;

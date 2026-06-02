@@ -1,6 +1,7 @@
 package com.mirage.sso.file;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author jotiancheng
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2026-06-02 17:46:37
 * @Entity com.mirage.sso.file.SsoMediaFile
 */
+@Mapper
 public interface SsoMediaFileMapper extends BaseMapper<SsoMediaFile> {
 
 }

@@ -1,4 +1,4 @@
-package com.mirage.sso.role;
+package com.mirage.sso.permission;
 
 public enum PermissionType {
     APP,

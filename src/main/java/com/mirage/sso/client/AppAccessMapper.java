@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+@Mapper
 public interface AppAccessMapper {
     @Select("select app_code from sso_user_app where user_id = #{userId} order by app_code")
     List<String> selectUserApps(@Param("userId") Long userId);

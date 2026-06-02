@@ -1,9 +1,11 @@
-package com.mirage.sso.role;
+package com.mirage.sso.permission;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.mirage.sso.common.BusinessException;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.mirage.sso.role.RoleStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
